@@ -39,8 +39,7 @@ jobs:
         run: npm run test
 
       - name: Auto Comments
-         run: 
-          # 通过 GitHub API 发送评论
+        run: |
           COMMENT_BODY="Hello! This is an automated comment from GitHub Actions."
           PR_NUMBER=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
           REPO_API_URL="https://api.github.com/repos/${GITHUB_REPOSITORY}"
