@@ -1,10 +1,8 @@
 name: Code Review
 
 on:
-  pull_request:
-    branches: [main]
-
-  workflow_dispatch:
+  push:
+    branches: [ "develop" ]
 
 jobs:
   build_and_add_comments:
@@ -26,8 +24,6 @@ jobs:
         uses: actions/setup-node@v2
         with: 
           node-version: 18
-          cache: "npm"
-          cache-dependency-path: "**/package-lock.json"
         
       - name: Install dependencies
         run: npm install
@@ -39,11 +35,4 @@ jobs:
         run: npm run test
 
       - name: Auto Comments
-        run: 
-          # 通过 GitHub API 发送评论
-          COMMENT_BODY="Hello! This is an automated comment from GitHub Actions."
-          PR_NUMBER=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-          REPO_API_URL="https://api.github.com/repos/${GITHUB_REPOSITORY}"
-          COMMENT_API_URL="$REPO_API_URL/issues/$PR_NUMBER/comments"
-          RESPONSE=$(curl -X POST -s -H "Authorization: token $GITHUB_TOKEN" -d "{\"body\":\"$COMMENT_BODY\"}" $COMMENT_API_URL)
-          echo "Response from GitHub API: $RESPONSE"
+        run: echo add comments...
