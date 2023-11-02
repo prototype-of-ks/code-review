@@ -41,8 +41,8 @@ jobs:
       - name: Auto Comments
         run: |
           COMMENT_BODY="Hello! This is an automated comment from GitHub Actions."
-          PR_NUMBER=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-          REPO_API_URL="https://api.github.com/repos/${GITHUB_REPOSITORY}"
+          PR_NUMBER="${{ github.event.pull_request.number }}"
+          REPO_API_URL="https://api.github.com/repos/${{ github.repository }}"
           COMMENT_API_URL="$REPO_API_URL/issues/$PR_NUMBER/comments"
           RESPONSE=$(curl -X POST -s -H "Authorization: token $GITHUB_TOKEN" -d "{\"body\":\"$COMMENT_BODY\"}" $COMMENT_API_URL)
           echo "Response from GitHub API: $RESPONSE"
