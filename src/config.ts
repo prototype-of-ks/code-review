@@ -1,7 +1,7 @@
 export enum GithubEnvVariables {
-    GITHUB_TOKEN,
-    GITHUB_SHA,
-    BASE_SHA
+    GITHUB_TOKEN = 'GITHUB_TOKEN',
+    GITHUB_SHA = 'GITHUB_SHA',
+    BASE_SHA = 'BASE_SHA'
 }
 
 export const githubToken = () => {
@@ -14,7 +14,7 @@ export const githubToken = () => {
 
 export const getGithubEnvVariables = () => {
     return {
-        githubToken: process.env[GithubEnvVariables.GITHUB_SHA] ?? '',
+        githubToken: process.env[GithubEnvVariables.GITHUB_TOKEN] ?? '',
         githubSha: process.env[GithubEnvVariables.GITHUB_SHA] ?? '',
         baseSha: process.env[GithubEnvVariables.BASE_SHA] ?? ''
     }
