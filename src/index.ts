@@ -9,3 +9,11 @@ console.log(`GITHUB_REPOSITORY: ${githubRepository}`);
 console.log(`GITHUB_SHA: ${githubSHA}`);
 console.log(`GITHUB_REF: ${githubRef}`);
 console.log(`GITHUB_EVENT_PATH: ${githubEventPath}`);
+
+export const main = async () => {
+    
+};
+
+main().catch(() => {
+    process.exit(1);
+})
