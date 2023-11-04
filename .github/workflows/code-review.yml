@@ -1,13 +1,17 @@
 name: Code Review
 
 on:
-  push:
-    branches: [ "develop" ]
+  # push:
+  #   branches: [ "develop" ]
+  pull_request:
+    branches: [ "main" ]
 
   workflow_dispatch:
 
 jobs:
   build_and_add_comments:
+    runs-on: ubuntu-latest
+
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # BASE_SHA: ${{ github.event.pull_request.base.sha }}
@@ -26,6 +30,8 @@ jobs:
         uses: actions/setup-node@v2
         with: 
           node-version: 18
+          cache: "npm"
+          cache-dependency-path: "**/package-lock.json"
         
       - name: Install dependencies
         run: npm install
@@ -37,4 +43,10 @@ jobs:
         run: npm run test
 
       - name: Auto Comments
-        run: echo add comments...
+        run: |
+          COMMENT_BODY="Hello! This is an automated comment from GitHub Actions."
+          PR_NUMBER="${{ github.event.pull_request.number }}"
+          REPO_API_URL="https://api.github.com/repos/${{ github.repository }}"
+          COMMENT_API_URL="$REPO_API_URL/issues/$PR_NUMBER/comments"
+          RESPONSE=$(curl -X POST -s -H "Authorization: token $GITHUB_TOKEN" -d "{\"body\":\"$COMMENT_BODY\"}" $COMMENT_API_URL)
+          echo "Response from GitHub API: $RESPONSE"
