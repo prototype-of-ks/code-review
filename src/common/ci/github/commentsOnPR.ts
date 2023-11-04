@@ -13,7 +13,7 @@ export const commentsOnPR = async (comment: string) => {
     const octokit = getOctokit(githubToken);
     const { owner, repo, number: pull_number } = issue;
 
-    const { data: comments } = octokit.rest.issues.listComments({
+    const comments = octokit.rest.issues.listComments({
       owner,
       issue_number: pull_number,
       repo,
