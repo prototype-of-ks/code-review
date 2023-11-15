@@ -14,18 +14,21 @@ export const commentsOnPR = async (comment: string) => {
     }
     const { owner, repo, number: pull_number } = issue;
 
-    const file = files[0];
-    const patchLine = file.patch?.toString().split('\n').length;
+    const file = files[1];
+    const patch = file.patch;
 
-    await octokit.rest.pulls.createReviewComment({
-      owner,
-      repo,
-      pull_number,
-      commit_id: commits[commits.length - 1].sha,
-      body: comment,
-      path: file.filename,
-      position: patchLine ? patchLine - 1 : 1,
-    });
+    if (patch) {
+      await octokit.rest.pulls.createReviewComment({
+        owner,
+        repo,
+        pull_number,
+        commit_id: commits[commits.length - 1].sha,
+        body: comment,
+        path: file.filename,
+        position: patch.split('\n').length - 1,
+      });
+    }
+
   } catch (error) {
     console.error(error);
   }
