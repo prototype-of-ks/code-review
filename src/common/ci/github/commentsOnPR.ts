@@ -23,7 +23,7 @@ export const commentsOnPR = async (comment: string) => {
       commit_id: commits[commits.length - 1].sha,
       body: comment,
       path: file.filename,
-      line: 1,
+      position: 1,
     });
   } catch (error) {
     console.error(error);
