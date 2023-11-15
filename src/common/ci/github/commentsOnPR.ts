@@ -15,6 +15,8 @@ export const commentsOnPR = async (comment: string) => {
     const { owner, repo, number: pull_number } = issue;
 
     const file = files[0];
+    const patchLine = file.patch?.toString().split('\n').length;
+
     await octokit.rest.pulls.createReviewComment({
       owner,
       repo,
@@ -22,7 +24,7 @@ export const commentsOnPR = async (comment: string) => {
       commit_id: commits[commits.length - 1].sha,
       body: comment,
       path: file.filename,
-      line: 0,
+      line: patchLine ? patchLine - 1 : 1,
     });
   } catch (error) {
     console.error(error);
