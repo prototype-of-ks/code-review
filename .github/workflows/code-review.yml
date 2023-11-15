@@ -14,8 +14,9 @@ jobs:
 
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      # BASE_SHA: ${{ github.event.pull_request.base.sha }}
-      # GITHUB_SHA: ${{ github.sha }}
+      BASE_SHA: ${{ github.event.pull_request.base.sha }}
+      GITHUB_SHA: ${{ github.sha }}
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
       # OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       # CLOUDFLARE_WORKER_HEALTH_URL: ${{ secrets.CLOUDFLARE_WORKER_HEALTH_URL }}
 
@@ -37,16 +38,7 @@ jobs:
         run: npm install
 
       - name: Build Typescript
-        run: npm run build
+        run: npm run ci
       
       - name: Run Tests
         run: npm run test
-
-      - name: Auto Comments
-        run: |
-          COMMENT_BODY="Hello! This is an automated comment from GitHub Actions."
-          PR_NUMBER="${{ github.event.pull_request.number }}"
-          REPO_API_URL="https://api.github.com/repos/${{ github.repository }}"
-          COMMENT_API_URL="$REPO_API_URL/issues/$PR_NUMBER/comments"
-          RESPONSE=$(curl -X POST -s -H "Authorization: token $GITHUB_TOKEN" -d "{\"body\":\"$COMMENT_BODY\"}" $COMMENT_API_URL)
-          echo "Response from GitHub API: $RESPONSE"

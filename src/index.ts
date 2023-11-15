@@ -1,21 +1,18 @@
-// const githubToken = process.env.GITHUB_TOKEN;
-// const githubRepository = process.env.GITHUB_REPOSITORY;
-// const githubSHA = process.env.GITHUB_SHA;
-// const githubRef = process.env.GITHUB_REF;
-// const githubEventPath = process.env.GITHUB_EVENT_PATH;
-
 import { commentsOnPR } from './common/ci/github/commentsOnPR';
-
-// console.log(`GITHUB_TOKEN: ${githubToken}`);
-// console.log(`GITHUB_REPOSITORY: ${githubRepository}`);
-// console.log(`GITHUB_SHA: ${githubSHA}`);
-// console.log(`GITHUB_REF: ${githubRef}`);
-// console.log(`GITHUB_EVENT_PATH: ${githubEventPath}`);
+import AIClient from './common/model/AIClient';
 
 export const main = async () => {
-  commentsOnPR('This is default comments');
+  // commentsOnPR('This is default comments');
+  // const client = new AIClient({
+  //   external: true
+  // });
+  // const feedbacks = await client.callModel('What time is it now?');
+  // console.log('feedbacks => ', feedbacks);
+
+  await commentsOnPR('this is comments');
 };
 
-main().catch(() => {
+main().catch((error) => {
+  console.error(error);
   process.exit(1);
 });

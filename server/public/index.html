@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Proxy</title>
+  </head>
+  <body>
+    <script type="text/javascript">
+			const ws = new WebSocket('ws://localhost:8080');
+
+      const safeParse = (json) => {
+        try {
+          return JSON.parse(json);
+        } catch (e) {
+          return {};
+        }
+      }
+
+			const getFeedbackFromExternal = async (prompt, messageId) => {
+				if (!prompt) {
+					return;
+				}
+				const response = await fetch(
+          'https://chatgpt-voice-server.herokuapp.com/chatgpt/messages',
+          {
+            method: 'POST',
+            body: JSON.stringify({
+              text: prompt,
+							messageId
+            }),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+        const feedbacks = await response.json();
+        return feedbacks;
+			};
+
+			ws.onopen = async () => {
+				console.log('ws connected');
+			};
+
+			ws.onmessage = async (message) => {
+				const { prompt, messageId } = safeParse(message.data);
+				const feedbacks = await getFeedbackFromExternal(prompt, message);
+        console.log('[feedbacks => ]', feedbacks);
+				ws.send(JSON.stringify(feedbacks));
+			}
+
+    </script>
+  </body>
+</html>

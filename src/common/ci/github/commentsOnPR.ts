@@ -1,40 +1,30 @@
-import { context, getOctokit } from '@actions/github';
-import { getToken } from '../util';
+import { context } from '@actions/github';
+import { getOctokit } from './getOctokit';
+import { getChangedFiles } from '../../git/getChangedFiles';
+
+const octokit = getOctokit();
 
 export const commentsOnPR = async (comment: string) => {
   try {
-    const githubToken = getToken();
     const { payload, issue } = context;
+    const { commits, files } = await getChangedFiles();
 
     if (!payload.pull_request) {
       return console.error('Not a pull request. Skipping commenting on PR...');
     }
-
-    const octokit = getOctokit(githubToken);
     const { owner, repo, number: pull_number } = issue;
 
-    const { data: comments } = await octokit.rest.issues.listComments({
+    const file = files[0];
+    await octokit.rest.pulls.createReviewComment({
       owner,
-      issue_number: pull_number,
       repo,
+      pull_number,
+      commit_id: commits[commits.length - 1].sha,
+      body: comment,
+      path: file.filename,
+      line: 0,
     });
-
-    const { data: commentResult } = await octokit.rest.issues.createComment({
-      owner,
-      issue_number: pull_number,
-      repo,
-      body: comment
-    });
-
-    // const botComment = comments.find((comment) =>
-    //   comment.body?.includes(signOff)
-    // );
-
-    console.log('[comment => ]', comment);
-    console.log('[comments => ]', comments);
-    console.log('[create comments result => ]', commentResult);
-
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
