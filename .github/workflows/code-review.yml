@@ -8,6 +8,12 @@ on:
 
   workflow_dispatch:
 
+permissions:
+  id-token: write
+  pull-requests: write
+  contents: read
+  actions: read
+
 jobs:
   build_and_add_comments:
     runs-on: ubuntu-latest
